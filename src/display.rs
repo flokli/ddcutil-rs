@@ -2,7 +2,7 @@ use std::{mem, fmt};
 use std::borrow::Cow;
 use std::ffi::{CStr, CString};
 use libc::{self, c_int, c_char};
-use {sys, Error, Status, FeatureCode, Capabilities, Value};
+use crate::{sys, Error, Result, Status, FeatureCode, Capabilities, Value};
 
 #[derive(Clone)]
 pub struct DisplayInfo {
@@ -19,7 +19,7 @@ unsafe impl Send for DisplayInfo { }
 unsafe impl Sync for DisplayInfo { }
 
 impl DisplayInfo {
-    pub fn open(&self) -> ::Result<Display> {
+    pub fn open(&self) -> Result<Display> {
         unsafe {
             let mut handle = mem::uninitialized();
             let status = sys::ddca_open_display(self.handle, &mut handle as *mut _);
@@ -55,7 +55,7 @@ impl DisplayInfo {
         }
     }
 
-    pub fn enumerate() -> ::Result<DisplayInfoList> {
+    pub fn enumerate() -> Result<DisplayInfoList> {
         unsafe {
             let res = sys::ddca_get_display_info_list();
             if res.is_null() {
@@ -136,7 +136,7 @@ pub enum DisplayPath {
 }
 
 impl DisplayPath {
-    pub fn from_raw(path: &sys::DDCA_IO_Path, usb_bus: c_int, usb_device: c_int) -> Result<Self, ()> {
+    pub fn from_raw(path: &sys::DDCA_IO_Path, usb_bus: c_int, usb_device: c_int) -> std::result::Result<Self, ()> {
         match path.io_mode {
             sys::DDCA_IO_DEVI2C => Ok(DisplayPath::I2c {
                 bus_number: path.i2c_busno(),
@@ -243,7 +243,7 @@ impl Display {
         }
     }
 
-    pub fn capabilities_string(&self) -> ::Result<CString> {
+    pub fn capabilities_string(&self) -> Result<CString> {
         unsafe {
             let mut res = mem::uninitialized();
             Error::from_status(sys::ddca_get_capabilities_string(
@@ -255,11 +255,11 @@ impl Display {
         }
     }
 
-    pub fn capabilities(&self) -> ::Result<Capabilities> {
+    pub fn capabilities(&self) -> Result<Capabilities> {
         self.capabilities_string().and_then(|c| Capabilities::from_cstr(&c))
     }
 
-    pub fn vcp_set_simple(&self, code: FeatureCode, value: u8) -> ::Result<()> {
+    pub fn vcp_set_simple(&self, code: FeatureCode, value: u8) -> Result<()> {
         unsafe {
             Error::from_status(sys::ddca_set_simple_nc_vcp_value(
                 self.handle, code as _, value
@@ -267,7 +267,7 @@ impl Display {
         }
     }
 
-    pub fn vcp_set_raw(&self, code: FeatureCode, value: u16) -> ::Result<()> {
+    pub fn vcp_set_raw(&self, code: FeatureCode, value: u16) -> Result<()> {
         unsafe {
             Error::from_status(sys::ddca_set_raw_vcp_value(
                 self.handle, code as _, (value >> 8) as u8, value as u8
@@ -275,7 +275,7 @@ impl Display {
         }
     }
 
-    pub fn vcp_set_continuous(&self, code: FeatureCode, value: i32) -> ::Result<()> {
+    pub fn vcp_set_continuous(&self, code: FeatureCode, value: i32) -> Result<()> {
         unsafe {
             Error::from_status(sys::ddca_set_continuous_vcp_value(
                 self.handle, code as _, value
@@ -283,7 +283,7 @@ impl Display {
         }
     }
 
-    pub fn vcp_get_value(&self, code: FeatureCode) -> ::Result<Value> {
+    pub fn vcp_get_value(&self, code: FeatureCode) -> Result<Value> {
         unsafe {
             let mut raw = mem::uninitialized();
             Error::from_status(sys::ddca_get_any_vcp_value(
@@ -300,7 +300,7 @@ impl Display {
         }
     }
 
-    pub fn vcp_get_table(&self, code: FeatureCode) -> ::Result<Vec<u8>> {
+    pub fn vcp_get_table(&self, code: FeatureCode) -> Result<Vec<u8>> {
         unsafe {
             let mut raw = mem::uninitialized();
             Error::from_status(sys::ddca_get_any_vcp_value(

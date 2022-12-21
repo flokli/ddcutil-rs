@@ -2,4 +2,5 @@
 /target/
 /.cargo/
 /.gitattributes
+/.idea
 *.swp

@@ -1,8 +1,6 @@
 #![doc(html_root_url = "http://arcnmx.github.io/ddcutil-rs/")]
 #![allow(non_camel_case_types, non_snake_case)]
 
-extern crate libc;
-
 use std::fmt;
 use std::slice::from_raw_parts;
 use libc::{c_char, c_int, c_void};

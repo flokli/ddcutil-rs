@@ -1,8 +1,6 @@
 #![doc(html_root_url = "http://arcnmx.github.io/ddcutil-rs/")]
-pub extern crate ddcutil_sys as sys;
+pub use ddcutil_sys as sys;
 extern crate libc;
-#[macro_use]
-extern crate bitflags;
 
 use std::{result, str};
 

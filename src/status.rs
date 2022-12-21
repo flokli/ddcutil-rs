@@ -1,5 +1,5 @@
 use std::{fmt, error, str};
-use {sys, c_str};
+use crate::{sys, c_str};
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Status {

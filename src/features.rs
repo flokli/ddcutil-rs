@@ -1,8 +1,11 @@
-use std::{mem, fmt};
-use std::ffi::CStr;
+use std::{fmt, mem};
 use std::collections::HashMap;
+use std::ffi::CStr;
+
+use bitflags::bitflags;
 use libc::c_char;
-use {sys, Error};
+
+use crate::{Error, Result, sys};
 
 pub type FeatureCode = u8;
 
@@ -47,7 +50,7 @@ impl MccsVersion {
         }
     }
 
-    pub fn from_id(raw: sys::DDCA_MCCS_Version_Id) -> Result<Self, ()> {
+    pub fn from_id(raw: sys::DDCA_MCCS_Version_Id) -> std::result::Result<Self, ()> {
         match raw {
             sys::DDCA_V10 => Ok(MccsVersion { major: 1, minor: 0 }),
             sys::DDCA_V20 => Ok(MccsVersion { major: 2, minor: 0 }),
@@ -58,7 +61,7 @@ impl MccsVersion {
         }
     }
 
-    pub fn id(&self) -> Result<sys::DDCA_MCCS_Version_Id, ()> {
+    pub fn id(&self) -> std::result::Result<sys::DDCA_MCCS_Version_Id, ()> {
         match *self {
             MccsVersion { major: 1, minor: 0 } => Ok(sys::DDCA_V10),
             MccsVersion { major: 2, minor: 0 } => Ok(sys::DDCA_V20),
@@ -96,7 +99,7 @@ impl Capabilities {
         }
     }
 
-    pub fn from_cstr(caps: &CStr) -> ::Result<Self> {
+    pub fn from_cstr(caps: &CStr) -> Result<Self> {
         unsafe {
             let mut res = mem::uninitialized();
             Error::from_status(sys::ddca_parse_capabilities_string(
@@ -118,7 +121,7 @@ pub struct FeatureInfo {
 }
 
 impl FeatureInfo {
-    pub fn from_code(code: FeatureCode, version: MccsVersion) -> ::Result<Self> {
+    pub fn from_code(code: FeatureCode, version: MccsVersion) -> Result<Self> {
         unsafe {
             let mut res = mem::uninitialized();
             Error::from_status(sys::ddca_get_feature_info_by_vcp_version(

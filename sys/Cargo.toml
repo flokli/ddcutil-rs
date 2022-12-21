@@ -1,4 +1,5 @@
 [package]
+edition = "2021"
 name = "ddcutil-sys"
 version = "0.0.3"
 authors = ["arcnmx"]
