@@ -19,11 +19,11 @@ unsafe impl Send for DisplayInfo { }
 unsafe impl Sync for DisplayInfo { }
 
 impl DisplayInfo {
-    pub fn open(&self) -> Result<Display> {
+    pub fn open(&self, wait: bool) -> Result<Display> {
         unsafe {
-            let mut handle = mem::uninitialized();
-            let status = sys::ddca_open_display(self.handle, &mut handle as *mut _);
-            Error::from_status(status).map(|_| Display::from_raw(handle))
+            let mut handle = mem::MaybeUninit::uninit();
+            let status = sys::ddca_open_display2(self.handle, wait, handle.as_mut_ptr());
+            Error::from_status(status).map(|_| Display::from_raw(handle.assume_init()))
         }
     }
 
@@ -334,6 +334,6 @@ impl Drop for Display {
 #[test]
 fn test_displays() {
     for display in &DisplayInfo::enumerate().unwrap() {
-        drop(display.open());
+        drop(display.open(true));
     }
 }
