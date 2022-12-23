@@ -55,14 +55,14 @@ impl DisplayInfo {
         }
     }
 
-    pub fn enumerate() -> Result<DisplayInfoList> {
+    pub fn enumerate(include_invalid_display: bool) -> Result<DisplayInfoList> {
         unsafe {
-            let res = sys::ddca_get_display_info_list();
-            if res.is_null() {
-                Err(Error::new(Status::new(libc::EINVAL)))
-            } else {
-                Ok(DisplayInfoList::from_raw(res))
-            }
+            let mut dlist_loc = mem::MaybeUninit::uninit();
+            let status = sys::ddca_get_display_info_list2(
+                include_invalid_display,
+                dlist_loc.as_mut_ptr(),
+            );
+            Error::from_status(status).map(|_| DisplayInfoList::from_raw(dlist_loc.assume_init()))
         }
     }
 
@@ -333,7 +333,7 @@ impl Drop for Display {
 
 #[test]
 fn test_displays() {
-    for display in &DisplayInfo::enumerate().unwrap() {
+    for display in &DisplayInfo::enumerate(false).unwrap() {
         drop(display.open(true));
     }
 }
