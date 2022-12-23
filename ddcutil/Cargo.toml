@@ -1,0 +1,22 @@
+[package]
+edition = "2021"
+name = "ddcutil"
+version = "0.0.3"
+authors = ["arcnmx"]
+
+description = "DDC/CI monitor access via libddcutil"
+keywords = ["ddcci", "ddc", "ci", "ddcutil", "vcp"]
+
+documentation = "http://arcnmx.github.io/ddcutil-rs/ddcutil"
+repository = "https://github.com/arcnmx/ddcutil-rs"
+readme = "README.md"
+license = "GPL-2.0+"
+
+[badges]
+travis-ci = { repository = "arcnmx/ddcutil-rs" }
+maintenance = { status = "passively-maintained" }
+
+[dependencies]
+ddcutil-sys = { version = "0.0.3", path = "../ddcutil-sys" }
+bitflags = "^1.0.1"
+libc = "^0.2.36"
