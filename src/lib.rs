@@ -1,6 +1,5 @@
 #![doc(html_root_url = "http://arcnmx.github.io/ddcutil-rs/")]
 pub use ddcutil_sys as sys;
-extern crate libc;
 
 use std::{result, str};
 

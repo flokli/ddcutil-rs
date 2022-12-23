@@ -17,4 +17,7 @@ travis-ci = { repository = "arcnmx/ddcutil-rs" }
 maintenance = { status = "passively-maintained" }
 
 [dependencies]
-libc = "^0.2.36"
+
+[build-dependencies]
+bindgen = "0.63"
+pkg-config = "0.3"
