@@ -7,7 +7,6 @@ fn main() {
         let handle = display.open(true).expect("DisplayInfo::open");
         let caps = handle.capabilities().expect("Display::capabilities()");
         for (code, cap) in &caps.features {
-            println!("{:#?}", code);
             let info = ddc::FeatureMetadata::from_code(*code, caps.version);
             if let Ok(info) = info {
                 if info.flags.is_readable() {
