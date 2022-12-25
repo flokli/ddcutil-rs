@@ -40,7 +40,7 @@ pub fn verification_enabled() -> bool {
     }
 }
 
-pub fn set_verification(onoff: bool) {
+pub fn set_verification(onoff: bool) -> bool {
     unsafe {
         sys::ddca_enable_verify(onoff)
     }
@@ -49,9 +49,9 @@ pub fn set_verification(onoff: bool) {
 #[repr(u8)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum OutputLevel {
-    Terse = sys::DDCA_OL_TERSE as _,
-    Normal = sys::DDCA_OL_NORMAL as _,
-    Verbose = sys::DDCA_OL_VERBOSE as _,
+    Terse = sys::DDCA_Output_Level_DDCA_OL_TERSE as _,
+    Normal = sys::DDCA_Output_Level_DDCA_OL_NORMAL as _,
+    Verbose = sys::DDCA_Output_Level_DDCA_OL_VERBOSE as _,
 }
 
 impl Default for OutputLevel {
@@ -63,9 +63,9 @@ impl Default for OutputLevel {
 impl OutputLevel {
     pub fn from_raw(raw: sys::DDCA_Output_Level) -> result::Result<Self, ()> {
         match raw {
-            sys::DDCA_OL_TERSE => Ok(OutputLevel::Terse),
-            sys::DDCA_OL_NORMAL => Ok(OutputLevel::Normal),
-            sys::DDCA_OL_VERBOSE => Ok(OutputLevel::Verbose),
+            sys::DDCA_Output_Level_DDCA_OL_TERSE => Ok(OutputLevel::Terse),
+            sys::DDCA_Output_Level_DDCA_OL_NORMAL => Ok(OutputLevel::Normal),
+            sys::DDCA_Output_Level_DDCA_OL_VERBOSE => Ok(OutputLevel::Verbose),
             _ => Err(()),
         }
     }
@@ -82,7 +82,7 @@ pub fn output_level() -> OutputLevel {
     }
 }
 
-pub fn set_output_level(value: OutputLevel) {
+pub fn set_output_level(value: OutputLevel) -> sys::DDCA_Output_Level {
     unsafe {
         sys::ddca_set_output_level(value.to_raw())
     }
@@ -91,9 +91,9 @@ pub fn set_output_level(value: OutputLevel) {
 #[repr(u8)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum RetryType {
-    WriteOnly = sys::DDCA_WRITE_ONLY_TRIES as _,
-    WriteRead = sys::DDCA_WRITE_READ_TRIES as _,
-    MultiPart = sys::DDCA_MULTI_PART_TRIES as _,
+    WriteOnly = sys::DDCA_Retry_Type_DDCA_WRITE_ONLY_TRIES as _,
+    WriteRead = sys::DDCA_Retry_Type_DDCA_WRITE_READ_TRIES as _,
+    MultiPart = sys::DDCA_Retry_Type_DDCA_MULTI_PART_TRIES as _,
 }
 
 impl RetryType {
