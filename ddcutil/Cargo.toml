@@ -17,6 +17,6 @@ travis-ci = { repository = "arcnmx/ddcutil-rs" }
 maintenance = { status = "passively-maintained" }
 
 [dependencies]
-ddcutil-sys = { version = "0.0.3", path = "../ddcutil-sys" }
+ddcutil-sys = { version = "0.0.4", path = "../ddcutil-sys" }
 bitflags = "^1.0.1"
 libc = "^0.2.36"
