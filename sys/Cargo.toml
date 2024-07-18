@@ -17,3 +17,9 @@ maintenance = { status = "passively-maintained" }
 
 [dependencies]
 libc = "^0.2.36"
+
+[build-dependencies]
+system-deps = "2.0"
+
+[package.metadata.system-deps]
+ddcutil = "2.*"
