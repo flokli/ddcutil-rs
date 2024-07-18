@@ -2,13 +2,10 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
-    pkg_config::Config::new()
-        .print_system_libs(false)
-        .atleast_version("1.3.0")
-        .probe("ddcutil")
-        .unwrap();
+    let deps = system_deps::Config::new().probe().unwrap();
 
     let bindings = bindgen::Builder::default()
+        .clang_args(deps.all_include_paths().into_iter().map(|p| format!("-I{0}", p.display())))
         .header("wrapper.h")
         .allowlist_type("DDCA_.*")
         .allowlist_type("ddca_.*")
